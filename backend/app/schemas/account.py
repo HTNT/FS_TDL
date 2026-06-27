@@ -4,7 +4,7 @@ from datetime import datetime
 
 class AccountCreate(BaseModel):
     email: EmailStr
-    password: str
+    password: str = ""
 
 class AccountInDB(BaseModel):
     id: int
@@ -17,3 +17,10 @@ class AccountInDB(BaseModel):
 
 class Account(AccountInDB):
     pass
+
+class RegisterRequest(BaseModel):
+    """Combined schema for register"""
+    email: EmailStr
+    password: str
+    username: str
+

@@ -8,42 +8,41 @@ from app.db.database import get_db
 from app.models.user import User
 from app.models.account import Account
 from app.schemas.user import LoginResponse, UserCreate
-from app.schemas.account import AccountCreate
+from app.schemas.account import RegisterRequest
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login")
 
 @router.post("/register", response_model=LoginResponse)
 def register(
-    account_in: AccountCreate,
-    user_in: UserCreate,
+    req: RegisterRequest,
     db: Session = Depends(get_db)
 ):
     """Register new account and create user profile"""
     
     # Check if email exists
-    existing_account = db.query(Account).filter(Account.email == account_in.email).first()
+    existing_account = db.query(Account).filter(Account.email == req.email).first()
     if existing_account:
         raise HTTPException(status_code=400, detail="Email already registered")
     
     # Check if username exists
-    existing_user = db.query(User).filter(User.username == user_in.username).first()
+    existing_user = db.query(User).filter(User.username == req.username).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Username already taken")
     
     # Create account
-    hashed_password = get_password_hash(account_in.password)
+    hashed_password = get_password_hash(req.password)
     db_account = Account(
-        email=account_in.email,
+        email=req.email,
         hashed_password=hashed_password
     )
     db.add(db_account)
-    db.flush()  # Get account.id without commit
+    db.flush()
     
     # Create user profile
     db_user = User(
         account_id=db_account.id,
-        username=user_in.username
+        username=req.username
     )
     db.add(db_user)
     db.commit()
