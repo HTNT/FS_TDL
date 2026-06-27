@@ -1,11 +1,11 @@
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
 from sqlalchemy.sql import func
 from app.db.base import Base
 
 class User(Base):
     __tablename__ = "users"
     
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(String(12), primary_key=True, index=True)  # yymmddxxxxxx
     account_id = Column(Integer, ForeignKey("accounts.id"), nullable=False, unique=True)
     username = Column(String, unique=True, index=True, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())

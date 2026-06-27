@@ -3,12 +3,13 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from app.core.config import settings
-from app.core.security import create_access_token, verify_password, get_password_hash
+from app.core.security import create_access_token, verify_password, get_password_hash, get_current_user
 from app.db.database import get_db
 from app.models.user import User
 from app.models.account import Account
 from app.schemas.user import LoginResponse, UserCreate
 from app.schemas.account import RegisterRequest
+from app.utils import generate_user_id
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login")
@@ -30,7 +31,7 @@ def register(
     if existing_user:
         raise HTTPException(status_code=400, detail="Username already taken")
     
-    # Create account
+    # Create account with auto-increment ID
     hashed_password = get_password_hash(req.password)
     db_account = Account(
         email=req.email,
@@ -39,8 +40,9 @@ def register(
     db.add(db_account)
     db.flush()
     
-    # Create user profile
+    # Create user profile with generated ID
     db_user = User(
+        id=generate_user_id(),
         account_id=db_account.id,
         username=req.username
     )

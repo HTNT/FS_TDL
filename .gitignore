@@ -51,3 +51,8 @@ build/
 *.sqlite3
 postgres-data/
 redis-data/
+
+# Documentation (local guides)
+BACKEND-SYSTEM-FLOW.md
+HUONG-DAN.md
+START.md

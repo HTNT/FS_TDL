@@ -4,6 +4,7 @@ from app.api.v1.api import api_router
 from app.core.config import settings
 from app.db.database import engine
 from app.db.base import Base
+from app import models  # Import to trigger __init__.py
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
