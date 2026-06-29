@@ -12,7 +12,7 @@ class PostUpdate(BaseModel):
 
 class Post(BaseModel):
     id: int
-    user_id: int
+    user_id: str
     title: str
     content: str
     created_at: datetime

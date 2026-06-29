@@ -6,7 +6,6 @@ from app.db.database import get_db
 from app.models.follow import Follow
 from app.models.user import User
 from app.schemas.follow import Follow as FollowSchema, FollowCreate
-from app.utils import generate_user_id
 
 router = APIRouter()
 
@@ -33,7 +32,7 @@ def follow_user(follower_id: str, follow_in: FollowCreate, db: Session = Depends
     if existing:
         raise HTTPException(status_code=400, detail="Already following")
     
-    follow = Follow(id=generate_user_id(), follower_id=follower_id, following_id=following_id)
+    follow = Follow(follower_id=follower_id, following_id=following_id)
     db.add(follow)
     db.commit()
     db.refresh(follow)

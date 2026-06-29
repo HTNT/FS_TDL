@@ -3,13 +3,20 @@ from typing import Optional
 from datetime import datetime
 
 class FriendshipCreate(BaseModel):
-    user_id_2: int
+    high_user: str
+    status: Optional[str] = "pending"
+
+class FriendshipUpdate(BaseModel):
+    status: str
 
 class Friendship(BaseModel):
     id: int
-    user_id_1: int
-    user_id_2: int
+    low_user: str
+    high_user: str
+    request_by: str
+    status: str
     created_at: datetime
+    updated_at: Optional[datetime] = None
     
     class Config:
         from_attributes = True

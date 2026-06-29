@@ -1,5 +1,5 @@
 from datetime import timedelta
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Form
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from app.core.config import settings
@@ -63,12 +63,12 @@ def register(
     }
 
 @router.post("/login", response_model=LoginResponse)
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+def login(username: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
     """Login with email and password"""
     
     # Find account by email
-    account = db.query(Account).filter(Account.email == form_data.username).first()
-    if not account or not verify_password(form_data.password, account.hashed_password):
+    account = db.query(Account).filter(Account.email == username).first()
+    if not account or not verify_password(password, account.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
