@@ -52,7 +52,8 @@ build/
 postgres-data/
 redis-data/
 
-# Documentation (local guides)
+# Documentation (local guides - these are temporary docs)
+# ⚠️ NOTE: PROJECT-FLOW.md should be TRACKED (main architecture doc)
 BACKEND-SYSTEM-FLOW.md
 HUONG-DAN.md
 START.md

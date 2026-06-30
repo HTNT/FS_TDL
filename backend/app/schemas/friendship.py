@@ -2,13 +2,6 @@ from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 
-class FriendshipCreate(BaseModel):
-    high_user: str
-    status: Optional[str] = "pending"
-
-class FriendshipUpdate(BaseModel):
-    status: str
-
 class Friendship(BaseModel):
     id: int
     low_user: str
