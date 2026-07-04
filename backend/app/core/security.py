@@ -36,7 +36,7 @@ from app.db.database import get_db
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/auth/login")
 
-async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     """Get current user from JWT token"""
     from app.models.account import Account
     from app.models.user import User
@@ -47,20 +47,29 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
         headers={"WWW-Authenticate": "Bearer"},
     )
     
+    # Step 1: Decode token
     payload = decode_access_token(token)
     if payload is None:
+        print(f"❌ Token decode failed: {token[:20]}...")
         raise credentials_exception
     
+    # Step 2: Extract email
     email: str = payload.get("sub")
     if email is None:
+        print(f"❌ Email not found in token payload")
         raise credentials_exception
     
+    # Step 3: Find account by email
     account = db.query(Account).filter(Account.email == email).first()
     if account is None:
+        print(f"❌ Account not found for email: {email}")
         raise credentials_exception
     
+    # Step 4: Find user by account_id
     user = db.query(User).filter(User.account_id == account.id).first()
     if user is None:
+        print(f"❌ User not found for account_id: {account.id}")
         raise credentials_exception
     
+    print(f"✅ User authenticated: {user.username} ({user.id})")
     return user

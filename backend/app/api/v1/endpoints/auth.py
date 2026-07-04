@@ -95,3 +95,11 @@ def login(username: str = Form(...), password: str = Form(...), db: Session = De
         "user": user
     }
 
+@router.post("/logout", status_code=status.HTTP_200_OK)
+def logout(current_user: User = Depends(get_current_user)):
+    """Logout user (invalidate token by clearing on client side)"""
+    return {
+        "message": "Logged out successfully",
+        "user_id": current_user.id
+    }
+
