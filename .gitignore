@@ -52,6 +52,10 @@ build/
 postgres-data/
 redis-data/
 
+# File uploads (media files - not tracked in git)
+backend/uploads/
+uploads/
+
 # Documentation (local guides - these are temporary docs)
 # ⚠️ NOTE: PROJECT-FLOW.md & POSTMAN-TEST-GUIDE.md should be TRACKED (main docs)
 BACKEND-SYSTEM-FLOW.md

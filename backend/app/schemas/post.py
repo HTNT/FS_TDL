@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 
 class PostCreate(BaseModel):
@@ -10,6 +10,17 @@ class PostUpdate(BaseModel):
     title: Optional[str] = None
     content: Optional[str] = None
 
+class MediaResponse(BaseModel):
+    id: int
+    file_url: str
+    file_type: str
+    file_size: int
+    original_filename: str
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
+
 class Post(BaseModel):
     id: int
     user_id: str
@@ -17,6 +28,7 @@ class Post(BaseModel):
     content: str
     created_at: datetime
     updated_at: Optional[datetime] = None
+    media: List[MediaResponse] = []
     
     class Config:
         from_attributes = True

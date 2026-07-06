@@ -34,9 +34,9 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     container_name: fastapi_backend
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     volumes:
       - ./backend:/app
+      - ./backend/uploads:/app/uploads
     ports:
       - "8000:8000"
     environment:
@@ -70,3 +70,4 @@ services:
 volumes:
   postgres_data:
   redis_data:
+  backend_uploads:
