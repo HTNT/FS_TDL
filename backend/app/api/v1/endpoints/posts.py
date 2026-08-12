@@ -18,11 +18,17 @@ router = APIRouter()
 async def create_post(
     title: str = Form(..., min_length=1, max_length=255),
     content: str = Form(..., min_length=1),
-    files: Optional[List[UploadFile]] = File(None),
+    files: List[UploadFile] = File(default=[]),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Create new post with optional media files (images/videos)"""
+    """Create new post with optional media files (images/videos)
+    
+    Form fields:
+    - title: Post title (required, 1-255 chars)
+    - content: Post content (required)
+    - files: File(s) to attach - images (JPEG, PNG, GIF, WebP) or videos (MP4, MPEG, MOV, AVI)
+    """
     
     # Tạo bài viết mới
     db_post = Post(
@@ -130,7 +136,10 @@ async def add_media_to_post(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Add media files to existing post"""
+    """Add media files to existing post
+    
+    Files: At least 1 file required
+    """
     post = db.query(Post).filter(Post.id == post_id).first()
     if not post:
         raise HTTPException(status_code=404, detail="Post not found")
